@@ -41,6 +41,22 @@ var rotate = function(nums, k) {
   }
 }
 
-var rotate = function(nums, k) { 
+// o(n)时间复杂度、o(1)空间复杂度 
+function reverse(nums, start, end) {
+  let tmp
+  while (start < end) {
+    tmp = nums[start]
+    nums[start] = nums[end]
+    nums[end] = tmp
+    start++
+    end--    
+  }
+}
 
+var rotate = function(nums, k) { 
+  const length = nums.length
+  k = k % length
+  reverse(nums, 0, length - 1)
+  reverse(nums, 0, k -1)
+  reverse(nums, k, length - 1)
 }
