@@ -17,5 +17,26 @@ Since the researcher has 3 papers with at least 3 citations each and the remaini
  * @return {number}
  */
 var hIndex = function(citations) {
+  const length = citations.length
+  const result = []
   
+  for (let i = 0; i < length; i++) {
+    const index = citations[i] >= length ? length : citations[i]
+    if (!result[index]) {
+      result[index]=0
+    }
+    result[index]++
+  }
+  
+  let count = 0
+  for (let i = length; i >= 0; i--) {
+    if (result[i]) {
+      count += result[i]
+    }
+    if (count >= i) {
+      return i
+    }
+  }
 };
+
+hIndex([3,0,6,1,5])
