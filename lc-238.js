@@ -8,8 +8,10 @@ You must write an algorithm that runs in O(n) time and without using the divisio
 
 Example 1:
 
-Input: nums = [1,2,3,4]
-Output: [24,12,8,6]
+Input: nums = [2,3,4,5]
+left:  2 6  24 120
+right: 5 20 60 120
+res:  60 40 30 24
  */
 
 
@@ -18,5 +20,15 @@ Output: [24,12,8,6]
  * @return {number[]}
  */
 var productExceptSelf = function(nums) {
-
+  const res = new Array(nums.length).fill(1);
+  let left = 1, right = 1;
+  for (let i = 0; i < nums.length; i++) {
+    res[i] *= left;
+    left *= nums[i];
+    
+    res[nums.length - i - 1] *= right;
+    right *= nums[nums.length - i - 1];
+  }
+  
+  return res
 };
