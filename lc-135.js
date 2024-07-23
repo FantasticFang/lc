@@ -90,9 +90,6 @@ var candy = function (ratings) {
   const n = ratings.length;
   const candies = []
   function getCandy(i) {
-    if (i < 0 || i >= n) {
-      return
-    }
     if (candies[i]) {
       return candies[i]
     }
