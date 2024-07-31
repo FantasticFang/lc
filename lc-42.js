@@ -122,9 +122,23 @@ var trap = function (height) {
   let leftMax = 0
   let rightMax = 0
   
-  for (let left = 0, right = n - 1; left < right;) {
-    
+  for (let left = 0, right = n - 1; left < right; ) {
+    if(height[left] > leftMax) {
+      leftMax = height[left]
+    }
+    if(height[right] > rightMax) {
+      rightMax = height[right]
+    }
+    if(leftMax <rightMax) {
+      sum += leftMax - height[left]
+      left++
+    } else {
+      sum += rightMax - height[right]
+      right--
+    }
   }
+
+  return sum
 }
 
 
