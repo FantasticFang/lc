@@ -129,7 +129,7 @@ var trap = function (height) {
     if(height[right] > rightMax) {
       rightMax = height[right]
     }
-    if(leftMax <rightMax) {
+    if(leftMax < rightMax) {
       sum += leftMax - height[left]
       left++
     } else {

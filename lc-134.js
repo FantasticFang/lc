@@ -76,13 +76,13 @@ var canCompleteCircuit = function(gas, cost) {
     total += gas[i] - cost[i]
     current += gas[i] - cost[i]
 
-    if(current < 0) { // 说明此路不通
+    if(current < 0) { // 说明此路不通，需要从i + 1再开始
       current = 0
       start = i + 1
     }
   }
 
-  if (total >= 0) {
+  if (total >= 0) { // 如果总油量大于路程才能够跑完
     return start % length
   }
 
