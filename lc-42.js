@@ -71,6 +71,7 @@ var trap = function (height) {
 /**
  * @param {number[]} height
  * @return {number}
+ * 思想：按列收集，但使用空间换时间，先求出左右最大值，再计算每一列能够收集到的雨滴数
  * 时间复杂度o(n)，空间复杂度o(n)
  */
 var trap = function (height) {
@@ -108,3 +109,54 @@ var trap = function (height) {
   
   return sum
 }
+
+/**
+ * @param {number[]} height
+ * @return {number}
+ * 时间复杂度o(n)，空间复杂度o(1)
+ * 动态规划优化版本、使用左右双指针
+ */
+var trap = function (height) {
+  let n = height.length
+  let sum = 0
+  let leftMax = 0
+  let rightMax = 0
+  
+  for (let left = 0, right = n - 1; left < right;) {
+    
+  }
+}
+
+
+/**
+ * @param {number[]} height
+ * @return {number}
+ * 单调栈
+ * 时间复杂度o(n)，空间复杂度o(n)
+ * Input: height = [4,2,0,3,2,5]
+ * Output: 9
+ */
+var trap = function (height) {
+  let n = height.length
+  let sum = 0
+  let i = 0
+  
+  const stack = []
+  
+  while (i < n) {
+    if (stack.length === 0 || height[stack[stack.length - 1]] >= height[i]) {
+      stack.push(i)
+      i++ // 入栈后，再更新下一个元素
+    } else {
+      let currentIndex = stack.pop()
+      let heightDiff = Math.min(height[stack[stack.length - 1]], height[i]) - height[currentIndex]
+      if (stack.length && heightDiff > 0) {
+        sum += (i - stack[stack.length - 1] - 1) * heightDiff
+      }
+    }
+  }
+  
+  return sum
+}
+
+trap([0,1,0,2,1,0,1,3,2,1,2,1])
