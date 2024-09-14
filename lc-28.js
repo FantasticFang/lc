@@ -50,21 +50,80 @@ var strStr = function (haystack, needle) {
   return -1
 };
 
-// KMP算法
+// KMP算法核心-求解相同的前缀和后缀
 function kmpNext(str) {
   const next = [0] // 初始化，str的第一位的next为0
   const length = str.length
   for (let i = 1, j = next[0]; i < length; i++) {
-    while (j > 0 && str[j] !== str[i]) { 
-      j = next[j - 1] // 如何理解？
+    while (j > 0 && str[j] !== str[i]) { // 总增加次数不会超过m，所以总减少次数同样也不会超过m，时间复杂度 <= 2 * m，所以为o(m) 
+      j = next[j - 1]
     }
     if (str[j] === str[i]) {
       j++
     }
-    next[i] = j
+    next[i] = j // 进入下次循环时，j就代表上一位的前缀函数的值
   }
 }
 
+/**
+直接利用kmp，解复杂度o(m + n)，空间复杂度o(m + n)
+将needle拼接在haystack前面，并使用#号链接，如果发现了next[i] = needle.length，那说明已经找到字符串needle
+*/
 var strStr = function (haystack, needle) {
+  const str = `${needle}#${haystack}`
+  const m = needle.length
+  const next = [0]
+  for (let i = 1, j = next[0]; i < str.length; i++) {
+    while (j > 0 && str[i] !== str[j]) {
+      j = next[j - 1]
+    }
+    
+    if (str[i] === str[j]) {
+      j++
+    }
+    next[i] = j
+    
+    if (j === m) {
+      return i - m * 2
+    }
+  }
   
+  return -1
 };
+
+/**
+ * 利用kmp算法的同时，降低空间复杂度
+ * 时间复杂度o(m + n), 空间复杂度o(m)
+ */
+var strStr = function (haystack, needle) {
+  let next = [0]
+  for (let i = 1, j = next[0]; i < needle.length; i++) {
+    while (needle[i] !== needle[j] && j > 0) {
+      j = next[j - 1]
+    }
+    if (needle[i] === needle[j]) {
+      j++
+    }
+    next[i] = j
+  }
+  
+  for (let i = 0, j = next[0]; i < haystack.length;) {  
+    while (haystack[i] !== needle[j] && j > 0) {
+      j = next[j - 1]
+    }    
+    if (haystack[i] === needle[j]) {
+      i++
+      j++
+    }
+    if (haystack[i] !== needle[j] && j === 0) {
+      i++
+    }
+    
+    if (j === needle.length) {
+      return i - j
+    }
+  }
+  
+  return -1
+}
+
