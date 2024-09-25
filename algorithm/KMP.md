@@ -33,7 +33,7 @@
     - 时间复杂度为o(s.length + t.length)
     - 空间复杂度为o(s.length + t.length)，空间复杂度有些冗余，生成了新的字符串"cas#abcasabc"，且需要一个数组来存储f(1)、f(2)...f(s.length + t.length)
   - 浪费的空间，可以使用指针来替代
-    ```
+    ```javascript
     var strStr = function (s, t) {
       const next = [0] // t的前缀函数值
       for(let i = 1, j = next[0]; i < t.length; i++) {
