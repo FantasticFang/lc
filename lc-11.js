@@ -25,16 +25,16 @@ Output: 1
  * @param {number[]} height
  * @return {number}
  */
-// 暴力深度遍历，超时
+// 暴力深度遍历，超时。增加空间，进行判断之后依然超时
 var maxArea = function(height) {
   let max = 0
   const res = {}
   
   function getMax(left, right) {
-    if (res[`${left}${right}`]) {
+    if (res[`${left}-${right}`]) {
       return
     }
-    res[`${left}${right}`] = true  
+    res[`${left}-${right}`] = true  
 
     if (left >= right) {
       return
@@ -52,3 +52,23 @@ var maxArea = function(height) {
   
   return max
 };
+
+
+var maxArea = function (height) {
+  let left = 0, right = height.length - 1, max = 0
+  while (left < right) {
+    const store = Math.min(height[left], height[right]) * (right - left)
+    if (store > max) {
+      max = store
+    }
+    
+    // 保持高的一面墙不动，寻找更高的墙，才有机会收集到更多的水
+    if (height[left] > height[right]) {
+      right--
+    } else {
+      left++
+    }
+  }
+  
+  return max
+}
