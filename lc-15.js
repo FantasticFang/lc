@@ -65,41 +65,28 @@ var threeSum = function (nums) {
 
 threeSum([34,55,79,28,46,33,2,48,31,-3,84,71,52,-3,93,15,21,-43,57,-6,86,56,94,74,83,-14,28,-66,46,-49,62,-11,43,65,77,12,47,61,26,1,13,29,55,-82,76,26,15,-29,36,-29,10,-70,69,17,49])
 
-
-// 
+// 先排序，再使用双指针方法
 var threeSum = function (nums) {
   nums.sort((a, b) => a - b) // n * log(n)
-  const map = {}
   const res = []
   
   for (let i = 0; i < nums.length; i++) {
-    let left = i + 1, right = nums.length - 1
+    if (i > 0 && nums[i] === nums[i - 1]) { // 去重
+      continue
+    }
+    let left = i + 1, right = nums.length - 1 // left的起点为何是i + 1？因为i之前的元素，已经在第一层for循环中被遍历过了，也就是包含i&三数之和等于0的元素已经被挑出来了
     while (left < right) {
-      if (left === i) {
+      if (nums[left] + nums[right] < -nums[i] || (left > i + 1 && nums[left] === nums[left - 1])) { // 数值偏小 || 有重复元素
         left++
         continue
       }
-      if (right === i) {
-        right--
-        continue
-      }
-      if (nums[left] + nums[right] < -nums[i]) {
-        left++
-        continue
-      }
-      if (nums[left] + nums[right] > -nums[i]) {
+      if (nums[left] + nums[right] > -nums[i] || (right < nums.length - 1 && nums[right] === nums[right + 1])) { // 数值偏大 || 有重复元素
         right--
         continue
       }
       
       if (nums[left] + nums[right] === -nums[i]) {
-        const tmpRes = [nums[i], nums[left], nums[right]]
-        const string = tmpRes.sort().join(',')
-        
-        if (!map[string]) {
-          res.push(tmpRes)
-          map[string] = true
-        }
+        res.push([nums[i], nums[left], nums[right]])
         
         left++
         right--
