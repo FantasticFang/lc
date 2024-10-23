@@ -82,4 +82,28 @@ var minSubArrayLen = function(target, nums) {
   return res
 };
 
+// 滑动窗口标准写法
+var minSubArrayLen = function(target, nums) {
+  let res = 0
+  let start = 0
+  let end = 0
+  let sum = 0
+ 
+  while (start < nums.length) {
+    if (sum < target && end < nums.length) {
+      sum += nums[end]
+      end++
+    }
+    if (sum >= target || end === nums.length){
+      if (sum >= target && (end - start < res || !res)) {
+        res = end - start
+      } 
+      sum -= nums[start]
+      start++
+    }
+  }
+  
+  return res
+};
+
 minSubArrayLen(11, [1,2,3,4,5])
