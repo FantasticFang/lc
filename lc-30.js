@@ -29,7 +29,7 @@ Output: []
 
 Explanation:
 
-There is no concatenated substring.
+There is no concatenated substri ng.
 
 Example 3:
 
@@ -59,5 +59,44 @@ s and words[i] consist of lowercase English letters.
  * @return {number[]}
  */
 var findSubstring = function(s, words) {
+  const step = words[0].length
+  const maxLength = step * words.length // 达到阈值的长度
+  let start = 0, end = 0
+  let flag = {} // 记录每一次使用哪些word的index
+  let result = []
   
+  function getIndex(word) {
+    for(let i = 0; i < words.length; i++) {
+      if (words[i] === word) {
+        return i
+      }
+    }
+    
+    return -1
+  }
+  
+  while (end + step - 1 < s.length) {
+    const current = s.substring(end, end + step)
+    const index = getIndex(current)
+    end += step
+    if (index > 0) { // 命中
+      if (!flag[index]) { // 命中未重复
+        flag[index] = true
+      } else { // 命中并重复
+      
+      }
+    } else { // 未命中
+    
+    }
+    
+    if (end - start === maxLength) {
+      result.push(start)
+      start += step
+      flag = {}
+    }
+  }
+  
+  return result
 };
+
+findSubstring("barfoofoobarthefoobarman", ["bar","foo","the"])
