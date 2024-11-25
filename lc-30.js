@@ -65,34 +65,51 @@ var findSubstring = function(s, words) {
   let flag = {} // 记录每一次使用哪些word的index
   let result = []
   
-  function getIndex(word) {
+  // -1：未命中、1：命中未重复、-2：命中并重复
+  function checkWord(word) {
+    let res = -1
+    
     for(let i = 0; i < words.length; i++) {
-      if (words[i] === word) {
-        return i
+      if (words[i] === word && !flag.hasOwnProperty(i)) {
+        res = i
+        return res
+      }
+      if (words[i] === word && flag.hasOwnProperty(i)) {
+        res = -2
       }
     }
-    
-    return -1
+
+    return res
+  }
+  
+  function deleteFlag(start) {  
+    for (let key in flag) {
+      if (flag[key] === start) {
+        delete flag[key]
+        return
+      }
+    }
   }
   
   while (end + step - 1 < s.length) {
     const current = s.substring(end, end + step)
-    const index = getIndex(current)
-    end += step
-    if (index > 0) { // 命中
-      if (!flag[index]) { // 命中未重复
-        flag[index] = true
-      } else { // 命中并重复
-      
-      }
-    } else { // 未命中
-    
+    const index = checkWord(current)
+    if (index >= 0) { // 命中
+      flag[index] = end
+      end += step 
+    } else if (index === -1) { // 未命中
+      end += step
+      start = end
+    } else if (index === -2) {  // 命中且重复
+      deleteFlag(start)
+      start += step
     }
     
     if (end - start === maxLength) {
       result.push(start)
+      
+      deleteFlag(start)
       start += step
-      flag = {}
     }
   }
   
