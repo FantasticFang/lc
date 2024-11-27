@@ -29,7 +29,7 @@ Output: []
 
 Explanation:
 
-There is no concatenated substri ng.
+There is no concatenated substring.
 
 Example 3:
 
@@ -58,6 +58,7 @@ s and words[i] consist of lowercase English letters.
  * @param {string[]} words
  * @return {number[]}
  */
+// 1. 难以解决步长问题，导致最终个别用例不能通过，调整步长过细粒度的话，又面临超时
 var findSubstring = function(s, words) {
   const step = words[0].length
   const maxLength = step * words.length // 达到阈值的长度
@@ -68,7 +69,6 @@ var findSubstring = function(s, words) {
   // -1：未命中、1：命中未重复、-2：命中并重复
   function checkWord(word) {
     let res = -1
-    
     for(let i = 0; i < words.length; i++) {
       if (words[i] === word && !flag.hasOwnProperty(i)) {
         res = i
@@ -78,7 +78,6 @@ var findSubstring = function(s, words) {
         res = -2
       }
     }
-
     return res
   }
   
@@ -98,8 +97,9 @@ var findSubstring = function(s, words) {
       flag[index] = end
       end += step 
     } else if (index === -1) { // 未命中
-      end += step
+      end = start + 1
       start = end
+      flag = {}
     } else if (index === -2) {  // 命中且重复
       deleteFlag(start)
       start += step
@@ -108,12 +108,106 @@ var findSubstring = function(s, words) {
     if (end - start === maxLength) {
       result.push(start)
       
-      deleteFlag(start)
-      start += step
+      end = start + 1
+      start = end
+      flag = {}
     }
   }
   
   return result
 };
 
-findSubstring("barfoofoobarthefoobarman", ["bar","foo","the"])
+//2. 思路更加清晰，将主要问题，分解为细粒度问题解决，复杂度过高，超时
+var findSubstring = function(s, words) {
+  const step = words[0].length
+  const length = step * words.length
+  let start = 0
+  let result = []
+  
+  function checkWord(str) {
+    const flag = {}
+    
+    for (let i = 0; i < str.length; i += step) {
+      for (let j = 0; j < words.length; j++) {
+        if (str.substring(i, i + step) === words[j] && !flag[j]) {
+          flag[j] = true
+          break
+        }
+      }
+      
+      if (Object.keys(flag).length !== (i / step + 1)) {
+        return false
+      } 
+    }
+    
+    return true
+  }
+
+  while (start + length <= s.length) {
+    const subString = s.substring(start, start + length)
+    
+    if (checkWord(subString)) {
+      result.push(start)
+    }
+    
+    start++
+  }
+  
+  return result
+};
+
+
+// 在方法2的基础上添加了map记录，以空间换时间，通过
+var findSubstring = function(s, words) {
+  const step = words[0].length
+  const length = step * words.length
+  let start = 0
+  const map = {}
+  let result = []
+  
+  function checkWord(str) {
+    const flag = {}
+    
+    for (let i = 0; i < str.length; i += step) {
+      for (let j = 0; j < words.length; j++) {
+        if (str.substring(i, i + step) === words[j] && !flag[j]) {
+          flag[j] = true
+          break
+        }
+      }
+      
+      if (Object.keys(flag).length !== (i / step + 1)) {
+        return false
+      } 
+    }
+    
+    return true
+  }
+
+  while (start + length <= s.length) {
+    const subString = s.substring(start, start + length)
+    
+    if (map.hasOwnProperty(subString)) {
+      if (map[subString]) {
+        result.push(start)
+      }
+      
+      start++ 
+      continue
+    }
+    
+    if (checkWord(subString)) {
+      result.push(start)
+      map[subString] = true
+    } else {
+      map[subString] = false
+    }
+    
+    start++
+  }
+  
+  return result
+};
+
+
+findSubstring("wordgoodgoodgoodbestword", ["word","good","best","word"])
