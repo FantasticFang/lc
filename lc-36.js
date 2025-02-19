@@ -108,6 +108,37 @@ var isValidSudoku = function (board) {
   return true
 };
 
+
+var isValidSudoku = function (board) {
+  // const rows = new Array(9).fill({}) 错误写法，如果fill的是对象，则会进行引用
+  const rows = new Array(9).fill(null).map(() => ({})) // 初始化9行，用于计数
+  const columns = new Array(9).fill(null).map(() => ({})) // 初始化9列，用于计数
+  const grids = new Array(3).fill(null).map(() => new Array(3).fill(null).map(() => ({}))) // 初始化9个九宫格，用于计数
+  for (let i = 0; i < 9; i++){
+    for (let j = 0; j < 9; j++) {
+      if (board[i][j] !== '.') {
+        if (!rows[i][board[i][j]]) {
+          rows[i][board[i][j]] = true
+        } else {
+          return false
+        }
+        if (!columns[j][board[i][j]]) {
+          columns[j][board[i][j]] = true
+        } else {
+          return false
+        }
+        if (!grids[Math.floor(i / 3)][Math.floor(j / 3)][board[i][j]]) {
+          grids[Math.floor(i / 3)][Math.floor(j / 3)][board[i][j]] = true
+        } else {
+          return false
+        }
+      }
+    }
+  }
+  
+  return true
+};
+
 isValidSudoku([
   [".", ".", ".", ".", ".", ".", "5", ".", "."],
   [".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -119,3 +150,4 @@ isValidSudoku([
   [".", ".", ".", ".", ".", "3", ".", ".", "."],
   [".", ".", ".", ".", ".", "5", "2", ".", "."]
 ])
+
